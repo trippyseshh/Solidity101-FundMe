@@ -1,0 +1,24 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
+
+contract FundMe{
+
+    // first of all, we'll define a lower limit on how much should be paid atleast.
+    uint256 minUSD = 5;
+    function funding() public payable{
+        require(msg.value > minUSD, "pay more");
+    }
+
+    // using interface to fetch real time USD value of ETH
+    // Address = 0x694AA1769357215DE4FAC081bf1f309aDC325306
+    // ABI
+    function usdValue() public view returns(int){
+        AggregatorV3Interface dataFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);  // here, we could also define dataFeed variable using a constructor: https://docs.chain.link/data-feeds/using-data-feeds
+        (,int256 answer,,,) = dataFeed.latestRoundData();
+        return answer;
+    }
+
+
+}
