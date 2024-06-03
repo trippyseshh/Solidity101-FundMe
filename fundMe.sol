@@ -10,10 +10,14 @@ import {AggregatorV3Interface} from "lib/chainlink-brownie-contracts/contracts/s
 contract funding {
     // min usd value
     uint256 minUsd = 5;
+    address[] funders; // creating an array to store the funders
+    mapping(address => uint256) senderToAmountFunded;
 
     // first of all, we will create a function to recieve funds
     function getFunds() public payable {
         require(getConversionrate(msg.value) > minUsd, "Send More");
+        funders.push(msg.sender); 
+        senderToAmountFunded[msg.sender] = senderToAmountFunded[msg.sender] + msg.value;
     }
 
     // creating a function to convert usd to eth
